@@ -1,0 +1,8 @@
+APPLICATION_JSON_MIME_TYPE = "appliation/json"
+MONGO_DB_URL = "mongodb://localhost:27017"
+
+COMPLETE = "COMPLETE"
+IN_COMPLETE = "IN_PROGRESS"
+
+OPEN = "OPEN"
+CLOSED = "CLOSED"
