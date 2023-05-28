@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-from constant import CLOSED, IN_COMPLETE, MONGO_DB_URL, OPEN
+from constant import CLOSED, IN_PROGRESS, MONGO_DB_URL, OPEN
 
 
 class ProjectBoardBase(object):
@@ -37,7 +37,8 @@ class ProjectBoardBase(object):
         request["creation_time"] = datetime.now()
         request["board_id"] = f"BOARD{int(time.mktime(datetime.now().timetuple()))}"
         request["status"] = OPEN
-        self.board_db.insert(request)
+        request["tasks"] = []
+        self.board_db.insert_one(request)
         return {"status": True, "message": "Board created Successfully!"}
 
     # close a board
@@ -54,18 +55,23 @@ class ProjectBoardBase(object):
             * Set the board status to CLOSED and record the end_time date:time
             * You can only close boards with all tasks marked as COMPLETE
         """
-        board = self.board_db.find({"board_id": request})
+        board = self.board_db.find_one({"board_id": request})
+        if not board:
+            return {"status": False, "message": f"{request} This board dosen't exist"}
         is_any_task_in_complete = False
-        for task in board.get("tasks", []):
-            if task.get("status", "") == IN_COMPLETE:
-                is_any_task_in_complete = True
-        if is_any_task_in_complete:
-            return {
-                "status": False,
-                "message": f"Task is not complted yet please complete the task and then close this board {request}",
-            }
+        if len(board.get("tasks", [])) > 0:
+            for task in board.get("tasks", []):
+                if task.get("status", "") == [IN_PROGRESS, OPEN]:
+                    is_any_task_in_complete = True
+            if is_any_task_in_complete:
+                return {
+                    "status": False,
+                    "message": f"Task is not complted yet please complete the task and then close this board {request}",
+                }
+            self.board_db.update_many({"board_id": request}, {"$set": {"status": CLOSED}})
+            return {"status": True, "message": f"Task is close {request}"}
         self.board_db.update_many({"board_id": request}, {"$set": {"status": CLOSED}})
-        return {"status": False, "message": f"Task is close {request}"}
+        return {"status": True, "message": "This board don't have any task; Closed this board"}
 
     # add task to board
     def add_task(self, request: dict) -> dict:
@@ -88,11 +94,11 @@ class ProjectBoardBase(object):
         * Can only add task to an OPEN board
         """
         board_name = request.get("title", "")
-        del request.get["title"]
+        del request["title"]
         request["task_id"] = f"TASK{int(time.mktime(datetime.now().timetuple()))}"
         request["creation_time"] = datetime.now()
         request["status"] = OPEN
-        self.board_db.update_one({"name": board_name}, {"$push": {"tasks": request}})
+        self.board_db.update_one({"name": board_name}, {"$addToSet": {"tasks": request}})
         return {"status": True, "message": "Task created", "id": request["task_id"]}
 
     # update the status of a task
@@ -125,10 +131,10 @@ class ProjectBoardBase(object):
             }
         ]
         """
-        board_details = self.board_db.find({"team_id": request}, {"board_id": 1, "_id": 0, "name": 1})
-        if board_details:
-            return board_details
-        return {"status": False, "message": f"Board not found fot his team id {team_id}"}
+        board_details = list(self.board_db.find({"team_id": request}, {"board_id": 1, "_id": 0, "name": 1}))
+        if len(board_details) > 0:
+            return {"status": True, "boards": board_details}
+        return {"status": False, "message": f"Board not found fot his team id {request}"}
 
     def export_board(self, request: str) -> dict:
         """
@@ -143,13 +149,14 @@ class ProjectBoardBase(object):
             "out_file" : "<name of the file created>"
         }
         """
-        board = self.board_db.find({"board_id": request}, {"_id": 0})
+        board = self.board_db.find_one({"board_id": request}, {"_id": 0})
         if board:
+            board["creation_time"] = datetime.strftime(board["creation_time"], "%c")
+            for task in board.get("tasks", []):
+                task["creation_time"] = datetime.strftime(task["creation_time"], "%c")
             json_object = json.dumps(board, indent=4)
-
-            # Writing to sample.json
             file_name = f"{request}.txt"
-            with open(file_name, "w") as outfile:
+            with open(f"out/{file_name}", "w") as outfile:
                 outfile.write(json_object)
             return {"out_file": file_name}
         return {"status": False, "message": "Board not found please try with different board id"}

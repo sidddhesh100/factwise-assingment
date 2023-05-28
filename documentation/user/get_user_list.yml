@@ -1,0 +1,38 @@
+Get Users list
+This api will help us to fetch all user details
+---
+tags:
+  - User
+
+definitions:
+  GetUserResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      users:
+        type: array
+        description: this array the list users object which holds the information of user
+        item:
+          $ref: "#/definiation/ArrayResponse"
+          
+  ArrayResponse:
+    name:
+      type: string
+      description: user name
+      example: "siddhesh@angane"
+    display_name:
+      type: string
+      description: user's full-name
+      example: "siddhesh angane"
+    creation_time:
+      type: string
+      description: date and time when the user get created in string format
+      example: Sun May 28 14:26:39 2023
+
+responses:
+  200:
+    schema:
+      $ref: '#/definitions/GetUserResponse'

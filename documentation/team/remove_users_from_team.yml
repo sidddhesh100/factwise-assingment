@@ -1,0 +1,41 @@
+Remove User From Team
+This api will help us to add remove user from the team
+---
+tags:
+  - Team
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+      - id
+      - users
+      properties:
+        id:
+            type: string
+            description: team id
+            default: TEAM1685266010
+        users:
+            type: array
+            description: This array contains user id's 
+            default: [USER1685264365]
+
+definitions:
+  RemoveUserFromTeamResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      message:
+        type: string
+        description: This show successful or failed message
+        example: User are removed
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/RemoveUserFromTeamResponse'

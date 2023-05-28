@@ -1,6 +1,7 @@
 import json
 
-from flask import Blueprint, Response, current_app, request
+from flasgger import swag_from
+from flask import Blueprint, Response, request
 from marshmallow import ValidationError
 
 from constant import APPLICATION_JSON_MIME_TYPE
@@ -13,6 +14,7 @@ project_board = Blueprint(name="project_board", import_name=__name__, url_prefix
 project_board_base = ProjectBoardBase()
 
 
+@swag_from("../documentation/board/create_board.yml")
 @project_board.route("/create_board/", methods=["POST"])
 def create_board():
     data = request.get_json()
@@ -24,6 +26,7 @@ def create_board():
     return Response(json.dumps(response), mimetype=APPLICATION_JSON_MIME_TYPE)
 
 
+@swag_from("../documentation/board/close_board.yml")
 @project_board.route("/close_board/", methods=["GET"])
 def close_board():
     board_id = request.args.get("id")
@@ -31,6 +34,7 @@ def close_board():
     return Response(json.dumps(response), mimetype=APPLICATION_JSON_MIME_TYPE)
 
 
+@swag_from("../documentation/board/add_task.yml")
 @project_board.route("/add_task/", methods=["POST"])
 def add_task():
     data = request.get_json()
@@ -42,6 +46,7 @@ def add_task():
     return Response(json.dumps(response), mimetype=APPLICATION_JSON_MIME_TYPE)
 
 
+@swag_from("../documentation/board/update_task_status.yml")
 @project_board.route("/update_task_status/", methods=["POST"])
 def update_task_status():
     data = request.get_json()
@@ -53,6 +58,7 @@ def update_task_status():
     return Response(json.dumps(response), mimetype=APPLICATION_JSON_MIME_TYPE)
 
 
+@swag_from("../documentation/board/list_boards.yml")
 @project_board.route("/list_boards/", methods=["GET"])
 def list_boards():
     team_id = request.args.get("id")
@@ -60,6 +66,7 @@ def list_boards():
     return Response(json.dumps(response), mimetype=APPLICATION_JSON_MIME_TYPE)
 
 
+@swag_from("../documentation/board/export_board.yml")
 @project_board.route("/export_board/", methods=["GET"])
 def export_board():
     board_id = request.args.get("id", "")

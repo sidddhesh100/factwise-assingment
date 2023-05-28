@@ -1,0 +1,26 @@
+Export Board
+This api will help us to export board into test file return file name in response
+---
+tags:
+  - Board
+parameters:
+  - name: id
+    in: query
+    required: true
+    description: Id of the Board
+    example: BOARD1685276287
+
+definitions:
+  ExportBoardResponse:
+    type: object
+    properties:
+      out_file:
+        type: string
+        description: name of the text file
+        example: BOARD1685276287.txt
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/ExportBoardResponse'

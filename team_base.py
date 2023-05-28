@@ -1,6 +1,7 @@
 import time
 from datetime import datetime
 
+from flask import current_app
 from pymongo import MongoClient
 
 from constant import MONGO_DB_URL
@@ -37,6 +38,7 @@ class TeamBase(object):
         request["team_id"] = f"TEAM{int(time.mktime(datetime.now().timetuple()))}"
         request["users"] = []
         self.team_db.insert_one(request)
+        current_app.logger.info(request)
         return {"status": True, "message": "Team created Successfully!"}
 
     # list all teams
@@ -52,9 +54,11 @@ class TeamBase(object):
           }
         ]
         """
-        teams_list = self.team_db.find_many({}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0})
+        teams_list = list(self.team_db.find({}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0}))
         if len(teams_list) == 0:
-            return {"status": False, "message": "Team are not available. Please create a new team"}
+            return {"status": False, "message": "Teams are not available. Please create a new team"}
+        for team in teams_list:
+            team["creation_time"] = datetime.strftime(team["creation_time"], "%c")
         return {"status": True, "team_list": teams_list}
 
     # describe team
@@ -75,10 +79,13 @@ class TeamBase(object):
         }
 
         """
-        response = self.team_db.find({"team_id": request}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0})
-        if response is None:
+        response = list(
+            self.team_db.find({"team_id": request}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0})
+        )
+        if not response:
             return {"status": False, "message": f"team not found for the this team id {request}"}
-        return {"status": True, "team_details": response}
+        response[0]["creation_time"] = datetime.strftime(response[0]["creation_time"], "%c")
+        return {"status": True, "team_details": response[0]}
 
     # update team
     def update_team(self, request: dict) -> dict:
@@ -102,7 +109,7 @@ class TeamBase(object):
         """
         team_id = request.get("team_id", "")
         updated_details = request.get("team", {})
-        self.team_db.update({"team_id": team_id}, {"$set": updated_details})
+        self.team_db.update_one({"team_id": team_id}, {"$set": updated_details})
         return {"status": True, "message": "Details updated Successfully!"}
 
     # add users to team
@@ -124,18 +131,18 @@ class TeamBase(object):
         available_user_list = []
         unavailable_user_list = []
         for user_id in users_id_list:
-            user = self.user_db.find({"user_id": user_id})
+            user = self.user_db.find_one({"user_id": user_id})
             if user:
-                data = {"user_name": user.get("name", ""), "user_id": user_id}
+                data = {"user_name": user.get("name", ""), "user_id": user_id, "display_name": user.get("display_name", "")}
                 available_user_list.append(data)
             else:
                 unavailable_user_list.append(user_id)
         if len(available_user_list) > 0:
-            self.team_db.update({"team_id": team_id}, {"$push": available_user_list})
-        message = "User added successfully!"
+            self.team_db.update_one({"team_id": team_id}, {"$addToSet": {"users": {"$each": available_user_list}}})
+        message = f"User{'s' if len(available_user_list) >1 else ''} added successfully!"
         if len(unavailable_user_list) > 0:
             message = (
-                f"{message} but this list of user id's are not available hence this user not updated for this team id {team_id}"
+                f"{message} but this list of user id's are not available hence this users not updated for this team id {team_id}"
             )
         return {"status": True, "message": message}
 
@@ -153,7 +160,9 @@ class TeamBase(object):
         Constraint:
         * Cap the max users that can be added to 50
         """
-        self.team_db.update({"team_id": request.get("id")}, {"$unset": {"users.$.user_id": {"$in": request.get("users", [])}}})
+        self.team_db.update_one(
+            {"team_id": request.get("id")}, {"$pull": {"users": {"user_id": {"$in": request.get("users", [])}}}}
+        )
         return {"status": True, "message": "User are removed"}
 
     # list users of a team
@@ -173,7 +182,7 @@ class TeamBase(object):
           }
         ]
         """
-        team = self.team_db.find({"team_id": request})
+        team = self.team_db.find_one({"team_id": request})
         if team:
             return {"status": True, "user_list": team.get("users", [])}
         else:

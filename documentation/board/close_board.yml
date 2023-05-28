@@ -1,0 +1,30 @@
+Close Board
+This api will help us to close board
+---
+tags:
+  - Board
+parameters:
+  - name: id
+    in: query
+    required: true
+    description: Id of the Board
+    example: BOARD1685276287
+
+definitions:
+  CloseBoardResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      message:
+        type: string
+        description: This show successful or failed message
+        example: Board Closed!
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/CloseBoardResponse'

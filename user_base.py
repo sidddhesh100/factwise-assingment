@@ -32,7 +32,7 @@ class UserBase(object):
         """
         request["user_id"] = f"USER{int(time.mktime(datetime.now().timetuple()))}"
         request["creation_time"] = datetime.now()
-        self.user_db.insert(request)
+        self.user_db.insert_one(request)
         return {"status": True, "message": "User created!", "id": request["user_id"]}
 
     # list all users
@@ -47,7 +47,9 @@ class UserBase(object):
           }
         ]
         """
-        user_list = self.user_db.find({}, {"_id": 0, "name": 1, "display_name": 1, "creation_time": 1})
+        user_list = list(self.user_db.find({}, {"_id": 0, "name": 1, "display_name": 1, "creation_time": 1}))
+        for user in user_list:
+            user["creation_time"] = datetime.strftime(user["creation_time"], "%c")
         if len(user_list) > 0:
             return {"status": True, "users": user_list}
         return {"status": False, "message": "User not found. Please create a users"}
@@ -69,9 +71,10 @@ class UserBase(object):
         }
 
         """
-        user = self.user_db.find({"user_id": request}, {"_id": 0, "name": 1, "description": 1, "creation_time": 1})
+        user = list(self.user_db.find({"user_id": request}, {"_id": 0, "name": 1, "description": 1, "creation_time": 1}))
         if user:
-            return {"status": True, "user": user}
+            user[0]["creation_time"] = datetime.strftime(user[0]["creation_time"], "%c")
+            return {"status": True, "user": user[0]}
         return {"status": False, "message": f"User not found for this user id{request}"}
 
     # update user
@@ -95,7 +98,7 @@ class UserBase(object):
         """
         user_id = request.get("id", "")
         updated_details = request.get("user", {})
-        self.user_db.update({"user_id": user_id}, {"$set": updated_details})
+        self.user_db.update_one({"user_id": user_id}, {"$set": updated_details})
         return {"status": True, "message": "Details updated!"}
 
     def get_user_teams(self, request: str) -> dict:
@@ -114,7 +117,8 @@ class UserBase(object):
           }
         ]
         """
-        team = self.team_db.find({"user.[].use_id": request}, {"name": 1, "description": 1, "creation_time": 1, "_id": 0})
+        team = self.team_db.find_one({"users.user_id": request}, {"name": 1, "description": 1, "creation_time": 1, "_id": 0})
         if team:
+            team["creation_time"] = datetime.strftime(team["creation_time"], "%c")
             return {"status": True, "team_details": team}
         return {"status": True, "message": f"Team not found for this user id {request}"}

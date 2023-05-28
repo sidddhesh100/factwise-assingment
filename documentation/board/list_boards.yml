@@ -1,0 +1,44 @@
+Get List of Board's
+This api will help us to get list of board available for the team
+---
+tags:
+  - Board
+parameters:
+  - name: id
+    in: query
+    required: true
+    description: team id
+    example: TEAM1685276287
+
+definitions:
+  ExportBoardResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        description: name of the text file
+        example: true
+      boards:
+        type: array
+        description: This contains all the board details assing to the respected team id 
+        $ref: "#/definitions/BoardResponse"
+
+  BoardResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        description: name of the board
+        example: board1
+      board_id:
+        type: string
+        description: id of the board
+        example: BOARD1685276287
+
+  
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/ExportBoardResponse'

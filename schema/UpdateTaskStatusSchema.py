@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 from marshmallow.validate import OneOf
 
-from constant import COMPLETE, IN_COMPLETE, OPEN
+from constant import CLOSED, COMPLETE, IN_PROGRESS, OPEN
 
 
 class UpdateTaskStatusSchema(Schema):
@@ -9,7 +9,7 @@ class UpdateTaskStatusSchema(Schema):
     status = fields.Str(
         required=True,
         validate=OneOf(
-            choices=[OPEN, COMPLETE, IN_COMPLETE],
-            error=f"Invalid task status; It should be one of these {OPEN}, {COMPLETE}, {IN_COMPLETE}",
+            choices=[OPEN, COMPLETE, IN_PROGRESS, CLOSED],
+            error=f"Invalid task status; It should be one of these {OPEN}, {COMPLETE}, {IN_PROGRESS},  {CLOSED}",
         ),
     )

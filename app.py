@@ -1,23 +1,37 @@
-from flask import Flask
-from pymongo import MongoClient
+from flasgger import Swagger
+from flask import Flask, redirect, request
 
+from blueprint.project_board import project_board
 from blueprint.team import team
 from blueprint.user import user
-from constant import MONGO_DB_URL
 
 app = Flask(__name__)
-# app.config["DB_CONN"] = MongoClient(MONGO_DB_URL)
-# app.config["FACTWISE"] = app.config["DB_CONN"]["factwise"]
 
 
 @app.route("/")
 def home():
-    return "Welcome!"
+    return redirect(f"{request.url}apidocs")
 
+
+SWAGGER_TEMPLATE = {
+    "swagger": "2.0",
+    "info": {
+        "title": "Factwise Assingment",
+        "description": "This service provides APIs for Team, User, Board and Task Managements",
+        "contact": {
+            "email": "siddheshangane142000@gmail.com",
+        },
+    },
+    # "host": "http://localhost:5008",
+    "schemes": ["http", "https"],
+}
+
+swagger = Swagger(app, template=SWAGGER_TEMPLATE)
 
 # register blueprints
 app.register_blueprint(user)
 app.register_blueprint(team)
+app.register_blueprint(project_board)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -1,0 +1,50 @@
+Add Task To Board
+This api will help us to add new task in board
+---
+tags:
+  - Board
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+      - title
+      - description
+      - user_id
+      properties:
+        title:
+          type: string
+          description: board name
+          default: board1
+        description:
+          type: string
+          description: description of task
+          default: fix backend issue
+        user_id:
+          type: string
+          description: user's id to whom we are assigning this task
+          default: USER1685264358
+
+definitions:
+  AddTaskToBoardResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      message:
+        type: string
+        description: This show successful or failed message
+        example: Users added successfully!
+      id:
+        type: string
+        description: Created task id
+        example: TASK1685278804
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/AddTaskToBoardResponse'

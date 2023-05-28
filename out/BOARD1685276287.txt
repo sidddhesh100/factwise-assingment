@@ -1,0 +1,17 @@
+{
+    "name": "board1",
+    "description": "",
+    "team_id": "TEAM1685266010",
+    "creation_time": "Sun May 28 17:48:07 2023",
+    "board_id": "BOARD1685276287",
+    "status": "OPEN",
+    "tasks": [
+        {
+            "description": "akdjs",
+            "user_id": "USER1685264358",
+            "task_id": "TASK1685278804",
+            "creation_time": "Sun May 28 18:30:04 2023",
+            "status": "OPEN"
+        }
+    ]
+}

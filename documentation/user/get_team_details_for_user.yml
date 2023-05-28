@@ -1,0 +1,45 @@
+Get User's Team Details
+This api will help us to get the the user team details using his user id
+---
+tags:
+  - User
+parameters:
+  - name: id
+    in: query
+    required: true
+    description: >
+      User id to fetch the user's team details
+
+definitions:
+  GetTeamResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      team_details:
+        type: object
+        description: this object contains the team details
+        properties:
+          name:
+            type: string
+            description: team name
+            example: "team1"
+          description:
+            type: string
+            description: description of team 
+            example: "welcome! to the team1"
+          creation_time:
+            type: string
+            description: date and time when the user get created in string format
+            example: Sun May 28 14:26:39 2023
+
+      
+
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/GetTeamResponse'

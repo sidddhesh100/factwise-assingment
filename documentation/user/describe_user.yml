@@ -1,0 +1,45 @@
+Describe User
+This api will help us to get the description of user
+---
+tags:
+  - User
+parameters:
+  - name: id
+    in: query
+    required: true
+    description: >
+      User id to fetch the description of user
+
+definitions:
+  DescribeUserResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      user:
+        type: object
+        description: This show successful or failed message
+        properties:
+          name:
+            type: string
+            description: user name
+            example: "siddhesh@angane"
+          description:
+            type: string
+            description: description of user 
+            example: "Hii! I am siddhesh"
+          creation_time:
+            type: string
+            description: date and time when the user get created in string format
+            example: Sun May 28 14:26:39 2023
+
+      
+
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/DescribeUserResponse'

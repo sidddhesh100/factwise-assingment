@@ -1,0 +1,42 @@
+Get Team List
+This api will help us to fetails all team details
+---
+tags:
+  - Team
+
+definitions:
+  GetTeamListResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      team_list:
+        type: array
+        description: this array the list users object which holds the information of user
+        item:
+          $ref: "#/definiation/TeamArrayResponse"
+          
+  TeamArrayResponse:
+    name:
+      type: string
+      description: user name
+      example: "siddhesh@angane"
+    admin:
+      type: string
+      description: user id
+      example: USER876543478
+    description:
+      type: string
+      description: team's description
+      example:  any-thing
+    creation_time:
+      type: string
+      description: date and time when the user get created in string format
+      example: Sun May 28 14:26:39 2023
+
+responses:
+  200:
+    schema:
+      $ref: '#/definitions/GetTeamListResponse'

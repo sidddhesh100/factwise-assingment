@@ -1,0 +1,45 @@
+Create Board
+This api will help us to create a new board
+---
+tags:
+  - Board
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+      - name
+      - admin
+      - team_id
+      properties:
+        name:
+            type: string
+            description: team name it should be unique
+            default: "team"
+        team_id:
+            type: string
+            description: team's id 
+            default: TEAM1685264365
+        description:
+            type: string
+            default: "This a board contains front end task"
+
+definitions:
+  CreateBoardResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      message:
+        type: string
+        description: This show successful or failed message
+        example: Board created Successfully!
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/CreateBoardResponse'

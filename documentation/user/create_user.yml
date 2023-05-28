@@ -1,0 +1,48 @@
+Create User
+This api will help us to create a new user
+---
+tags:
+  - User
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+      - name
+      - display_name
+      - description
+      properties:
+        name:
+            type: string
+            default: "siddhesh@angane"
+        display_name:
+            type: string
+            default: "Siddhesh angena"
+        description:
+            type: string
+            default: "Hii! I am Siddhesh"
+
+definitions:
+  CreateUserResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+        description: This show us the operation is successful or not
+        example: true
+      message:
+        type: string
+        description: This show successful or failed message
+        example: User created!
+      id:
+        type: string
+        description: Created user's id
+        example: USER1685264382
+
+
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+    schema:
+      $ref: '#/definitions/CreateUserResponse'
