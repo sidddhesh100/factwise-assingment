@@ -2,9 +2,9 @@ import time
 from datetime import datetime
 
 from flask import current_app
-from pymongo import MongoClient
+# from pymongo import MongoClient
 
-from constant import MONGO_DB_URL
+# from constant.constant import MONGO_DB_URL
 
 
 class TeamBase(object):
@@ -14,9 +14,9 @@ class TeamBase(object):
     Users can be
     """
 
-    def __init__(self) -> None:
-        self.team_db = MongoClient(MONGO_DB_URL)["factwise"]["team"]
-        self.user_db = MongoClient(MONGO_DB_URL)["factwise"]["user"]
+    # def __init__(self) -> None:
+    #     current_app.config["DB_CONN"]["factwise"]["team"] = current_app.v[""]["factwise"]["team"]
+    #     current_app.config["DB_CONN"]["factwise"]["user"] = MongoClient(MONGO_DB_URL)["factwise"]["user"]
 
     # create a team
     def create_team(self, request: dict) -> dict:
@@ -37,9 +37,9 @@ class TeamBase(object):
         request["creation_time"] = datetime.now()
         request["team_id"] = f"TEAM{int(time.mktime(datetime.now().timetuple()))}"
         request["users"] = []
-        self.team_db.insert_one(request)
+        current_app.config["DB_CONN"]["factwise"]["team"].insert_one(request)
         current_app.logger.info(request)
-        return {"status": True, "message": "Team created Successfully!"}
+        return {"status": True, "message": "Team created Successfully!", "team_id":request["team_id"]}
 
     # list all teams
     def list_teams(self) -> dict:
@@ -54,7 +54,7 @@ class TeamBase(object):
           }
         ]
         """
-        teams_list = list(self.team_db.find({}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0}))
+        teams_list = list(current_app.config["DB_CONN"]["factwise"]["team"].find({}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0}))
         if len(teams_list) == 0:
             return {"status": False, "message": "Teams are not available. Please create a new team"}
         for team in teams_list:
@@ -80,7 +80,7 @@ class TeamBase(object):
 
         """
         response = list(
-            self.team_db.find({"team_id": request}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0})
+            current_app.config["DB_CONN"]["factwise"]["team"].find({"team_id": request}, {"name": 1, "description": 1, "creation_time": 1, "admin": 1, "_id": 0})
         )
         if not response:
             return {"status": False, "message": f"team not found for the this team id {request}"}
@@ -109,7 +109,7 @@ class TeamBase(object):
         """
         team_id = request.get("team_id", "")
         updated_details = request.get("team", {})
-        self.team_db.update_one({"team_id": team_id}, {"$set": updated_details})
+        current_app.config["DB_CONN"]["factwise"]["team"].update_one({"team_id": team_id}, {"$set": updated_details})
         return {"status": True, "message": "Details updated Successfully!"}
 
     # add users to team
@@ -131,14 +131,14 @@ class TeamBase(object):
         available_user_list = []
         unavailable_user_list = []
         for user_id in users_id_list:
-            user = self.user_db.find_one({"user_id": user_id})
+            user = current_app.config["DB_CONN"]["factwise"]["user"].find_one({"user_id": user_id})
             if user:
                 data = {"user_name": user.get("name", ""), "user_id": user_id, "display_name": user.get("display_name", "")}
                 available_user_list.append(data)
             else:
                 unavailable_user_list.append(user_id)
         if len(available_user_list) > 0:
-            self.team_db.update_one({"team_id": team_id}, {"$addToSet": {"users": {"$each": available_user_list}}})
+            current_app.config["DB_CONN"]["factwise"]["team"].update_one({"team_id": team_id}, {"$addToSet": {"users": {"$each": available_user_list}}})
         message = f"User{'s' if len(available_user_list) >1 else ''} added successfully!"
         if len(unavailable_user_list) > 0:
             message = (
@@ -160,7 +160,7 @@ class TeamBase(object):
         Constraint:
         * Cap the max users that can be added to 50
         """
-        self.team_db.update_one(
+        current_app.config["DB_CONN"]["factwise"]["team"].update_one(
             {"team_id": request.get("id")}, {"$pull": {"users": {"user_id": {"$in": request.get("users", [])}}}}
         )
         return {"status": True, "message": "User are removed"}
@@ -182,7 +182,7 @@ class TeamBase(object):
           }
         ]
         """
-        team = self.team_db.find_one({"team_id": request})
+        team = current_app.config["DB_CONN"]["factwise"]["team"].find_one({"team_id": request})
         if team:
             return {"status": True, "user_list": team.get("users", [])}
         else:

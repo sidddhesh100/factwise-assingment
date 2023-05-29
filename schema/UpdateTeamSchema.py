@@ -1,21 +1,26 @@
-from marshmallow import Schema, fields
-from marshmallow.validate import Length, OneOf
-from pymongo import MongoClient
-
-from constant import MONGO_DB_URL
+from flask import current_app
+from marshmallow import Schema, ValidationError, fields, validates_schema
+from marshmallow.validate import Length
 
 
 class TeamSchema(Schema):
     name = fields.Str(validate=Length(max=64))
     description = fields.Str(validate=Length(max=128))
-    admin = fields.Str(
-        validate=OneOf(choices=MongoClient(MONGO_DB_URL)["factwise"]["user"].distinct("user_id"), error="Invalide user id"),
-    )
+    admin = fields.Str(validate=Length(equal=14))
 
 
 class UpdateTeamSchema(Schema):
     id = fields.Str(
         required=True,
-        validate=OneOf(choices=MongoClient(MONGO_DB_URL)["factwise"]["team"].distinct("team_id"), error="User id not exist"),
+        validate=Length(equal=14),
     )
-    team = fields.Nested(TeamSchema, required=True)
+    team = fields.Nested(TeamSchema, required=True, validate=Length(min=1))
+
+    @validates_schema
+    def validate_update_team_schema(self, data, **kwargs):
+        if data.get("id") and data.get("id") not in current_app.config["DB_CONN"]["factwise"]["team"].distinct("team_id"):
+            raise ValidationError("Invalid team id")
+        if data.get("team", {}).get("admin") and data.get("team", {}).get("admin") not in current_app.config["DB_CONN"][
+            "factwise"
+        ]["user"].distinct("user_id"):
+            raise ValidationError("Invalid user id")

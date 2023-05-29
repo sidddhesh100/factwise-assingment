@@ -1,26 +1,18 @@
-from marshmallow import Schema, fields
-from marshmallow.validate import Length, NoneOf, OneOf
-from pymongo import MongoClient
-
-from constant import MONGO_DB_URL
+from flask import current_app
+from marshmallow import Schema, ValidationError, fields, validates_schema
+from marshmallow.validate import Length
 
 
 class CreateBoardSchema(Schema):
-    name = fields.Str(
-        required=True,
-        validate=[
-            Length(max=64),
-            NoneOf(iterable=MongoClient(MONGO_DB_URL)["factwise"]["board"].distinct("name"), error="Board name already exist"),
-        ],
-    )
+    name = fields.Str(required=True, validate=Length(max=64, min=1))
     description = fields.Str(required=True, validate=Length(max=128))
-    team_id = fields.Str(
-        required=True,
-        validate=[
-            # NoneOf(
-            #     iterable=MongoClient(MONGO_DB_URL)["factwise"]["board"].distinct("team_id"),
-            #     error="team alredy had a board please enter different team id ",
-            # ),
-            OneOf(choices=MongoClient(MONGO_DB_URL)["factwise"]["team"].distinct("team_id"), error="Team id does not exist"),
-        ],
-    )
+    team_id = fields.Str(required=True, validate=Length(equal=14))
+
+    @validates_schema
+    def validate_create_board_schema(self, data, **kwargs):
+        if data.get("name") and data.get("name") in current_app.config["DB_CONN"]["factwise"]["board"].distinct("name"):
+            raise ValidationError("Board name already exist")
+        if data.get("team_id") and data.get("team_id") not in current_app.config["DB_CONN"]["factwise"]["team"].distinct(
+            "team_id"
+        ):
+            raise ValidationError("Team id does not exist")

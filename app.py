@@ -1,11 +1,13 @@
 from flasgger import Swagger
 from flask import Flask, redirect, request
+from pymongo import MongoClient
 
 from blueprint.project_board import project_board
 from blueprint.team import team
 from blueprint.user import user
 
 app = Flask(__name__)
+app.config["DB_CONN"] = MongoClient("mongodb://localhost:27017")
 
 
 @app.route("/")

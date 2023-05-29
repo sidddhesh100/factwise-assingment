@@ -4,7 +4,7 @@ from flasgger import swag_from
 from flask import Blueprint, Response, current_app, request
 from marshmallow import ValidationError
 
-from constant import APPLICATION_JSON_MIME_TYPE
+from constant.constant import APPLICATION_JSON_MIME_TYPE
 from schema.AddRemoveUserToTeamSchema import AddRemoveUserToTeamSchema
 from schema.CreateTeamSchema import CreateTeamSchema
 from schema.UpdateTeamSchema import UpdateTeamSchema
@@ -18,6 +18,7 @@ team_base = TeamBase()
 @team.route("/create_team/", methods=["POST"])
 def create_team():
     data = request.get_json()
+    print(current_app.config["DB_CONN"])
     current_app.logger.info(f"request: {data}")
     try:
         CreateTeamSchema().load(data)

@@ -4,13 +4,14 @@ from flasgger import swag_from
 from flask import Blueprint, Response, request
 from marshmallow import ValidationError
 
-from constant import APPLICATION_JSON_MIME_TYPE
+from constant.constant import APPLICATION_JSON_MIME_TYPE
 from project_board_base import ProjectBoardBase
 from schema.CreateBoardSchema import CreateBoardSchema
 from schema.CreateTaskSchema import CreateTaskSchema
 from schema.UpdateTaskStatusSchema import UpdateTaskStatusSchema
 
 project_board = Blueprint(name="project_board", import_name=__name__, url_prefix="/project/board")
+
 project_board_base = ProjectBoardBase()
 
 

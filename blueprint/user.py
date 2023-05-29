@@ -4,7 +4,7 @@ from flasgger import swag_from
 from flask import Blueprint, Response, request
 from marshmallow import ValidationError
 
-from constant import APPLICATION_JSON_MIME_TYPE
+from constant.constant import APPLICATION_JSON_MIME_TYPE
 from schema.CreateUserSchema import CreateUserSchema
 from schema.UpdateUserSchema import UpdateUserSchema
 from user_base import UserBase

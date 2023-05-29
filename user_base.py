@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-from constant import MONGO_DB_URL
+from constant.constant import MONGO_DB_URL
 
 
 class UserBase(object):

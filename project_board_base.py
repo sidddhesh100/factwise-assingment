@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-from constant import CLOSED, IN_PROGRESS, MONGO_DB_URL, OPEN
+from constant.constant import CLOSED, IN_PROGRESS, MONGO_DB_URL, OPEN
 
 
 class ProjectBoardBase(object):
@@ -39,7 +39,7 @@ class ProjectBoardBase(object):
         request["status"] = OPEN
         request["tasks"] = []
         self.board_db.insert_one(request)
-        return {"status": True, "message": "Board created Successfully!"}
+        return {"status": True, "message": "Board created Successfully!", "board_id":request["board_id"]}
 
     # close a board
     def close_board(self, request: str) -> dict:
