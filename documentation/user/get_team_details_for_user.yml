@@ -28,14 +28,14 @@ definitions:
             example: "team1"
           description:
             type: string
-            description: description of team 
+            description: description of team
             example: "welcome! to the team1"
           creation_time:
             type: string
             description: date and time when the user get created in string format
             example: Sun May 28 14:26:39 2023
 
-      
+
 
 
 responses:

@@ -28,14 +28,14 @@ definitions:
             example: "siddhesh@angane"
           description:
             type: string
-            description: description of user 
+            description: description of user
             example: "Hii! I am siddhesh"
           creation_time:
             type: string
             description: date and time when the user get created in string format
             example: Sun May 28 14:26:39 2023
 
-      
+
 
 
 responses:

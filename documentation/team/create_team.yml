@@ -19,7 +19,7 @@ parameters:
             default: "team"
         admin:
             type: string
-            description: user id 
+            description: user id
             default: USER1685264365
         description:
             type: string

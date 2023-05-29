@@ -19,7 +19,7 @@ definitions:
         example: true
       user_list:
         type: array
-        description: 
+        description:
         properties:
           user_name:
             type: string
@@ -30,7 +30,7 @@ definitions:
             description: user's id
             example: USER1685264199
 
-    
+
 responses:
   200:
     description: A list of colors (may be filtered by palette)

@@ -17,7 +17,7 @@ definitions:
         description: this array the list users object which holds the information of user
         item:
           $ref: "#/definiation/TeamArrayResponse"
-          
+
   TeamArrayResponse:
     name:
       type: string

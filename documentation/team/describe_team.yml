@@ -39,7 +39,7 @@ definitions:
             description: team's admin id
             example: USER1685264199
 
-      
+
 
 
 responses:

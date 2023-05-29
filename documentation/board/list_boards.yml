@@ -20,7 +20,7 @@ definitions:
         example: true
       boards:
         type: array
-        description: This contains all the board details assing to the respected team id 
+        description: This contains all the board details assing to the respected team id
         $ref: "#/definitions/BoardResponse"
 
   BoardResponse:
@@ -35,7 +35,7 @@ definitions:
         description: id of the board
         example: BOARD1685276287
 
-  
+
 
 responses:
   200:

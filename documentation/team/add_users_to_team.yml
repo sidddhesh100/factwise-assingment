@@ -18,7 +18,7 @@ parameters:
             default: TEAM1685266010
         users:
             type: arrys
-            description: This array contains user id's 
+            description: This array contains user id's
             default: [USER1685264365]
 
 definitions:

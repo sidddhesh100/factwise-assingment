@@ -19,7 +19,7 @@ parameters:
             default: "team"
         team_id:
             type: string
-            description: team's id 
+            description: team's id
             default: TEAM1685264365
         description:
             type: string
