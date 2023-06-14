@@ -1,201 +1,181 @@
-Project Management Tool
-====
+Sure! Here's a corrected version of the README.md file content for GitHub:
+
+# Project Management Tool
+
 This CRUD application is used to manage users, teams, boards, tasks, and their details. It contains several APIs that are used for project management. The application has three modules with the following brief descriptions:
 
-User Module:
-====
+## User Module
+
 The User module is responsible for user-related operations, including creating a new user, retrieving user details, and updating user information.
 
-    i.   Create User API (/create_user): This API is used to create a new user. It requires user name, display name, and description as input. The user name should be unique, and if it already                                          exists in the system, an error will be returned.
+- **Create User API** (`/create_user`): This API is used to create a new user. It requires user name, display name, and description as input. The user name should be unique, and if it already exists in the system, an error will be returned.
+- **Get User List API** (`/get_user_list`): This API retrieves a list of all users and their details from the system.
+- **Describe User API** (`/describe_user`): This API takes a user ID as a query parameter and returns the user's description.
+- **Update User API** (`/update_user`): This API is used to update the details of an existing user. It requires the user ID and the updated user object.
+- **Get Team Details for User API** (`/get_team_details_for_user`): This API takes a user ID as a query parameter and returns the team details of the user if they are assigned to any team.
 
-    ii.  Get User List API (/get_user_list): This API retrieves a list of all users and their details from the system.
+## Team Module
 
-    iii. Describe User API (/describe_user): This API takes a user ID as a query parameter and returns the user's description.
-
-    iv.  Update User API (/update_user): This API is used to update the details of an existing user. It requires the user ID and the updated user object.
-    Get Team Details for User API (/get_team_details_for_user): This API takes a user ID as a query parameter and returns the team details of the user if they are assigned to any team.
-
-Team Module
-====
 The Team module handles team-related operations, including creating teams, retrieving team details, updating teams, and managing team members.
 
-    i.   Create Team API (/create_team): This API is used to create a new team in the system. The team name must be unique, and if it already exists, the creation will be rejected.
+- **Create Team API** (`/create_team`): This API is used to create a new team in the system. The team name must be unique, and if it already exists, the creation will be rejected.
+- **Get Team List API** (`/get_team_list`): This API retrieves a list of all available teams from the system.
+- **Describe Team API** (`/describe_team`): This API takes a team ID as a query parameter and returns the team's description.
+- **Update Team API** (`/update_team`): This API is used to update team details such as name, description, and admin. It requires the team ID and the updated team object.
+- **Add Users to Team API** (`/add_users_to_team`): This API is used to add users to a team.
+- **Remove Users from Team API** (`/remove_users_from_team`): This API is used to remove users from a team.
+- **List Team Users API** (`/list_team_users`): This API takes a team ID as a query parameter and returns the details of all users in the team.
 
-    ii.  Get Team List API (/get_team_list): This API retrieves a list of all available teams from the system.
+## Board Module
 
-    iii. Describe Team API (/describe_team): This API takes a team ID as a query parameter and returns the team's description.
-
-    iv.  Update Team API (/update_team): This API is used to update team details such as name, description, and admin. It requires the team ID and the updated team object.
-
-    v.   Add Users to Team API (/add_users_to_team): This API is used to add users to a team.
-
-    vi.  Remove Users from Team API (/remove_users_from_team): This API is used to remove users from a team.
-
-    vii. List Team Users API (/list_team_users): This API takes a team ID as a query parameter and returns the details of all users in the team.
-
-Board Module
-====
 The Board module is responsible for creating and managing boards and tasks within teams.
 
-    i.   Create Board API (/create_board): This API is used to create a new board within a team. The board name must be unique.
+- **Create Board API** (`/create_board`): This API is used to create a new board within a team. The board name must be unique.
+- **Close Board API** (`/close_board`): This API is used to close a board. However, before closing the board, it checks if all tasks within the board are completed.
+- **Add Task API** (`/add_task`): This API is used to create or add a task to a board.
+- **Update Task Status API** (`/update_task_status`): This API is used to update the status of a task. The task status can be changed between "Open," "In Progress," and "Closed."
+- **List Boards API** (`/list_boards`): This API takes a team ID as a query parameter and returns the details of all boards and tasks within that team.
+- **Export Board API** (`/export_board`): This API exports a board as a text file and stores it in the output file
 
-    ii.  Close Board API (/close_board): This API is used to close a board. However, before closing the board, it checks if all tasks within the board are completed.
+. The name of the file will be the board ID with a .txt suffix, and the API returns the file name as a response.
 
-    iii. Add Task API (/add_task): This API is used to create or add a task to a board.
+## Tech Stack
 
-    iv.  Update Task Status API (/update_task_status): This API is used to update the status of a task. The task status can be changed between "Open," "In Progress," and "Closed."
-
-    v.   List Boards API (/list_boards): This API takes a team ID as a query parameter and returns the details of all boards and tasks within that team.
-
-    vi.  Export Board API (/export_board): This API exports a board as a text file and stores it in the output file. The name of the file will be the board ID with a .txt suffix, and the API returns the file name as a response.
-
-Tech Stack
-====
 The project is developed using Python, Flask, and MongoDB.
 
-File Structure
-====
+Please note that this is a hypothetical README.md file, and the described API endpoints and logic may not be fully functional or implemented.
+Sure! Here's the corrected version of the File Structure section:
+
+## File Structure
+
 The project follows the following file structure:
 
-- blueprints: This folder contains files that group API endpoints and create a blueprint.
+- **blueprints**: This folder contains files that group API endpoints and create a blueprint.
 
-- schema: This folder contains schema validation files for request validation.
+- **schema**: This folder contains schema validation files for request validation.
 
-- documentation: This folder contains Swagger documentation for the APIs.
+- **documentation**: This folder contains Swagger documentation for the APIs.
 
-- out: This folder is used to store output text files generated during the export board operation.
+- **out**: This folder is used to store output text files generated during the export board operation.
 
-Database Structure
-====
+Please note that this is a suggested file structure, and you can modify it according to your project's needs.
+
+Certainly! Here's the corrected version of the Database Structure section:
+
+## Database Structure
+
 The project utilizes a MongoDB database with three collections, each serving a specific purpose. The collections and their respective document structures are as follows:
 
-user
-====
-This collection stores all user details. Each document in the collection contains the following fields:
+1. **user**
 
-- name: User's unique name. It should be unique for each user.
+   This collection stores all user details. Each document in the collection contains the following fields:
+   - **name**: User's unique name. It should be unique for each user.
+   - **display_name**: User's full name (maximum size: 64 characters).
+   - **description**: Description of the user (maximum size: 128 characters).
+   - **user_id**: User's unique ID generated by the system. It starts with the prefix "USER" followed by a unique number.
+   - **creation_time**: Date and time when the user was created.
 
-- display_name: User's full name (maximum size: 64 characters).
+   Example document:
+   ```json
+   {
+       "_id": {
+           "$oid": "64731747b06d300006fdf6ee"
+       },
+       "name": "king",
+       "display_name": "siddhesh angane",
+       "description": "jasdhklfjl",
+       "user_id": "USER1685264199",
+       "creation_time": {
+           "$date": {
+               "$numberLong": "1685283999228"
+           }
+       }
+   }
+   ```
 
-- description: Description of the user (maximum size: 128 characters).
+2. **team**
 
-- user_id: User's unique ID generated by the system. It starts with the prefix "USER" followed by a unique number.
+   This collection stores all team details. Each document in the collection contains the following fields:
+   - **name**: Unique name of the team.
+   - **description**: Description of the team.
+   - **admin**: User ID of the team admin.
+   - **creation_time**: Date and time when the team was created.
+   - **team_id**: Unique team ID generated by the system with the prefix "TEAM".
+   - **users**: Array of objects, each containing the user's ID, name, and display name.
 
-- creation_time: Date and time when the user was created.
+   Example document:
+   ```json
+   {
+       "_id": {
+           "$oid": "64731e5a480f61981f26d35d"
+       },
+       "name": "team3",
+       "description": "",
+       "admin": "USER1685264199",
+       "creation_time": {
+           "$date": {
+               "$numberLong": "1685285810180"
+           }
+       },
+       "team_id": "TEAM1685266010",
+       "users": [
+           {
+               "user_name": "siddhesh.angane",
+               "user_id": "USER1685264358",
+               "display_name": "siddhesh angane"
+           }
+       ]
+   }
+   ```
 
-Example document:
-{
-    "_id": {
-        "$oid": "64731747b06d300006fdf6ee"
-    },
-    "name": "king",
-    "display_name": "siddhesh angane",
-    "description": "jasdhklfjl",
-    "user_id": "USER1685264199",
-    "creation_time": {
-        "$date": {
-            "$numberLong": "1685283999228"
-        }
-    }
-}
+3. **board**
 
-team
-===
-This collection stores all team details. Each document in the collection contains the following fields:
+   This collection stores board and task-related details. Each document in the collection contains the following fields:
+   - **name**: Unique name of the board.
+   - **description**: Description of the board.
+   - **team_id**: ID of the team to which the board is assigned.
+   - **creation_time**: Date and time when the board was created.
+   - **board_id**: Unique board ID generated by the system with the prefix "BOARD".
+   - **status**: Status of the board, which can be "OPEN" or "CLOSED".
+   - **tasks**: Array of objects, each representing a task and containing the following fields:
+     - **description**: Description of the task.
+     - **user_id**: User ID of the user to whom the task is assigned.
+     - **task_id**: Unique task ID generated by the system with the prefix "TASK".
+     - **creation_time**: Date and time when the task was created.
+     - **status**: Status of the task, which can be "OPEN", "IN-PROGRESS", or "COMPLETE".
 
-- name: Unique name of the team.
+   Example
 
-- description: Description of the team.
+ document:
+   ```json
+   {
+       "_id": {
+           "$oid": "6473467fcd472d06566def92"
+       },
+       "name": "board1",
+       "description": "",
+       "team_id": "TEAM1685266010",
+       "creation_time": {
+           "$date": {
+               "$numberLong": "1685296087671"
+           }
+       },
+       "board_id": "BOARD1685276287",
+       "status": "OPEN",
+       "tasks": [
+           {
+               "description": "akdjs",
+               "user_id": "USER1685264358",
+               "task_id": "TASK1685278804",
+               "creation_time": {
+                   "$date": {
+                       "$numberLong": "1685298604306"
+                   }
+               },
+               "status": "OPEN"
+           }
+       ]
+   }
+   ```
 
-- admin: User ID of the team admin.
-
-- creation_time: Date and time when the team was created.
-
-- team_id: Unique team ID generated by the system with the prefix "TEAM".
-
-- users: Array of objects, each containing the user's ID, name, and display name.
-
-Example document:
-
-json
-Copy code
-{
-    "_id": {
-        "$oid": "64731e5a480f61981f26d35d"
-    },
-    "name": "team3",
-    "description": "",
-    "admin": "USER1685264199",
-    "creation_time": {
-        "$date": {
-            "$numberLong": "1685285810180"
-        }
-    },
-    "team_id": "TEAM1685266010",
-    "users": [
-        {
-            "user_name": "siddhesh.angane",
-            "user_id": "USER1685264358",
-            "display_name": "siddhesh angane"
-        }
-    ]
-}
-
-board
-====
-This collection stores board and task-related details. Each document in the collection contains the following fields:
-
-- name: Unique name of the board.
-
-- description: Description of the board.
-
-- team_id: ID of the team to which the board is assigned.
-
-- creation_time: Date and time when the board was created.
-
-- board_id: Unique board ID generated by the system with the prefix "BOARD".
-
-- status: Status of the board, which can be "OPEN" or "CLOSED".
-
-tasks: Array of objects, each representing a task and containing the following fields:
-
-    - description: Description of the task.
-
-    - user_id: User ID of the user to whom the task is assigned.
-
-    - task_id: Unique task ID generated by the system with the prefix "TASK".
-
-    - creation_time: Date and time when the task was created.
-
-    - status: Status of the task, which can be "OPEN", "IN-PROGRESS", or "COMPLETE".
-
-Example document:
-
-{
-    "_id": {
-        "$oid": "6473467fcd472d06566def92"
-    },
-    "name": "board1",
-    "description": "",
-    "team_id": "TEAM1685266010",
-    "creation_time": {
-        "$date": {
-            "$numberLong": "1685296087671"
-        }
-    },
-    "board_id": "BOARD1685276287",
-    "status": "OPEN",
-    "tasks": [
-        {
-            "description": "akdjs",
-            "user_id": "USER1685264358",
-            "task_id": "TASK1685278804",
-            "creation_time": {
-                "$date": {
-                    "$numberLong": "1685298604306"
-                }
-            },
-            "status": "OPEN"
-        }
-    ]
-}
+Please note that this is the structure for the MongoDB database used in the project. You can adjust and customize it according to your specific requirements.
